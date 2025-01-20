@@ -58,7 +58,29 @@ public class MemorySpace {
 	 * @return the base address of the allocated block, or -1 if unable to allocate
 	 */
 	public int malloc(int length) {		
-		//// Replace the following statement with your code
+		ListIterator iterate = freeList.iterator();	
+		while(iterate.hasNext()){
+			if(iterate.current.block.length<length){
+				iterate.next();
+				break;
+			} 
+			else{
+				//(1)
+				MemoryBlock newblock = new MemoryBlock(iterate.current.block.baseAddress, length); 
+				//(2)
+				allocatedList.addLast(newblock); 
+				//(3)
+				if(iterate.current.block.length>length){
+					iterate.current.block.baseAddress += length;
+					iterate.current.block.length -= length;
+				}
+				else{
+					freeList.remove(iterate.current);
+				}
+				//(4)
+				return newblock.baseAddress;
+			}
+		}
 		return -1;
 	}
 
@@ -71,7 +93,15 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		//// Write your code here
+		int index = allocatedList.indexOf(address);
+		if(index==-1){
+			throw new IllegalArgumentException(
+					"No block with this adress in use");
+		}
+		else{
+			freeList.addLast(allocatedList.getBlock(index));
+			allocatedList.remove(allocatedList.getBlock(index));
+		}
 	}
 	
 	/**
@@ -88,7 +118,23 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
-		/// TODO: Implement defrag test
-		//// Write your code here
+		ListIterator freeiterate = freeList.iterator();
+		while(freeiterate.hasNext()){
+		MemoryBlock prev = freeiterate.next();
+		ListIterator inIterator = freeList.iterator();
+		int currentIndex = 0;
+			while(inIterator.hasNext()){
+				MemoryBlock current = inIterator.next();
+				//System.out.println((prev.length+prev.baseAddress)+ " "+ current.baseAddress);
+					if(prev.baseAddress+prev.length==current.baseAddress){
+						prev.length += current.length;
+						freeList.remove(currentIndex);
+						inIterator= freeList.iterator();
+						currentIndex = 0;
+						continue;
+					}
+					currentIndex++;
+			}
+		}
 	}
 }
