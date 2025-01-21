@@ -191,13 +191,24 @@ public class LinkedList {
 	 *        the node that will be removed from this list
 	 */
 	public void remove(Node node) {
-		if(indexOf(node.block)==0){
+		int index = indexOf(node.block);
+		if(size==1){
+			first=null;
+			last=first;
+			size--;
+		}
+		else if(index==0){
 			first=node.next;
 			node.next=null;
 			size--;
 		}
+		else if(index==size-1){
+			last = getNode(index-1);
+			last.next = null;
+			size--;
+		}
 		else{
-			getNode(indexOf(node.block)-1).next=node.next;
+			getNode(index-1).next=node.next;
 			size--;
 		}
 	}
@@ -245,12 +256,12 @@ public class LinkedList {
 	 * A textual representation of this list, for debugging.
 	 */
 	public String toString() {
-		String str = "(";
+		String str = "";
 		Node current = first;
 		while(current!=null){
 			str += current.toString() + " ";
 			current=current.next; 
 		}
-		return str.substring(0, str.length()-1)+")";
+		return str;
 	}
 }

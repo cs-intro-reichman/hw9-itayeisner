@@ -62,7 +62,6 @@ public class MemorySpace {
 		while(iterate.hasNext()){
 			if(iterate.current.block.length<length){
 				iterate.next();
-				break;
 			} 
 			else{
 				//(1)
@@ -94,11 +93,11 @@ public class MemorySpace {
 	 */
 	public void free(int address) {
 		int index = allocatedList.indexOf(address);
-		if(index==-1){
+		if(allocatedList.getFirst()==null&&index==-1){
 			throw new IllegalArgumentException(
-					"No block with this adress in use");
+					"index must be between 0 and size");
 		}
-		else{
+		if(index!=-1){
 			freeList.addLast(allocatedList.getBlock(index));
 			allocatedList.remove(allocatedList.getBlock(index));
 		}
