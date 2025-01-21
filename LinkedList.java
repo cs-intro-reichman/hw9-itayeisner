@@ -50,7 +50,7 @@ public class LinkedList {
 	 * @return the node at the given index
 	 */		
 	public Node getNode(int index) {
-		if (index < 0 || index > size) {
+		if (index < 0 || index >= size) {
 			throw new IllegalArgumentException(
 					"index must be between 0 and size");
 		}
@@ -93,7 +93,7 @@ public class LinkedList {
 			addLast(block);
 		}
 		else{
-			n.next=getNode(index).next;
+			n.next=getNode(index);
 			getNode(index-1).next=n;
 			size++;
 		}
